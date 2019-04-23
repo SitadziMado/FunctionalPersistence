@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,8 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Persistent\List.fs" />
-    <Compile Include="Program.fs" />
+    <ProjectReference Include="..\PersistentDataStructuresConsole\PersistentDataStructuresConsole.fsproj" />
   </ItemGroup>
 
 </Project>

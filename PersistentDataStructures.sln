@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PersistentDataStructuresConsole", "PersistentDataStructuresConsole\PersistentDataStructuresConsole.fsproj", "{8D1040B1-E91C-40B6-9743-E9BE702662E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpClient", "CSharpClient\CSharpClient.csproj", "{0542BC05-E0C3-4F51-BB9C-83F3EC790F66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8D1040B1-E91C-40B6-9743-E9BE702662E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D1040B1-E91C-40B6-9743-E9BE702662E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D1040B1-E91C-40B6-9743-E9BE702662E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0542BC05-E0C3-4F51-BB9C-83F3EC790F66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0542BC05-E0C3-4F51-BB9C-83F3EC790F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0542BC05-E0C3-4F51-BB9C-83F3EC790F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0542BC05-E0C3-4F51-BB9C-83F3EC790F66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
