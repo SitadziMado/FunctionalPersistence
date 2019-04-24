@@ -71,9 +71,6 @@
     let take (n : int) =
         takeAndProcessTheRest (fun x -> Nil) n 
 
-    let internal insRem (f : 't List -> 't List) n  = 
-        takeAndProcessTheRest f n
-
     /// <summary>
     /// Создание новой версии списка, в которой будет
     /// присутствовать элемент value на позиции pos + 1.
@@ -82,7 +79,7 @@
     /// <param name="pos">Позиция вставки</param>
     /// <param name="list">Список для обработки</param>
     let insertAfter value (pos : int) =
-        takeAndProcessTheRest (fun xs -> Cons(value, xs)) pos
+        takeAndProcessTheRest (fun xs -> Cons(value, xs)) (pos + 1)
 
     /// <summary>
     /// Создание новой версии списка, в которой будет
@@ -127,4 +124,14 @@
                 yield! toSeq xs
         }
 
+    let rec toList (list : 't List) =
+        list
+        |> toSeq
+        |> Seq.toList
+
     let print x = printf "%A" x
+
+    let lst = createList [1; 2; 3]
+    
+    lst
+    |> insertAfter 100 1
