@@ -26,7 +26,7 @@ type TestClass () =
 
     [<TestMethod>]
     member this.mapTest () =
-        eq [3; 5; 7; 9; 11; 13] (list |> map ((+) 2) |> toList)
+        eq [3; 4; 5; 6; 7; 8] (list |> map ((+) 2) |> toList)
     
     [<TestMethod>]
     member this.take () =

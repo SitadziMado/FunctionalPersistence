@@ -61,11 +61,11 @@
         | Cons(x, xs) -> build (Cons(x, acc)) xs
 
         let rec take' (acc : 't List) n = function
-        | Nil -> failwith "В списке слишком мало элементов."
-        | Cons(x, xs) -> 
-            if n > 0 then take' (Cons(x, acc)) (n - 1) xs
-                     else build (f xs) acc 
-                     
+        | Nil when n > 0 -> failwith "В списке слишком мало элементов."
+        | rest when n = 0 -> build (f rest) acc 
+        | Cons(x, xs) -> take' (Cons(x, acc)) (n - 1) xs
+        
+        checkPos n
         take' Nil n list
         
     let take (n : int) =
@@ -107,7 +107,7 @@
     /// <param name="pos">Позиция для удаления</param>
     /// <param name="list">Список для обработки</param>
     let removeAt (pos : int) =
-        takeAndProcessTheRest (fun (Cons(x, xs)) -> xs) (pos - 1)
+        takeAndProcessTheRest (fun (Cons(x, xs)) -> xs) pos
 
     /// <summary>
     /// Создание новой версии без первого элемента.
