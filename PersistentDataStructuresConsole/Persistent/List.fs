@@ -3,7 +3,7 @@
     /// Односвязный список с сохранением версий.
     /// </summary>
     type 't List = Cons of 't * 't List
-                 | Nil  
+                 | Nil
               
     let internal identity (x : 't) = x
 
@@ -130,8 +130,3 @@
         |> Seq.toList
 
     let print x = printf "%A" x
-
-    let lst = createList [1; 2; 3]
-    
-    lst
-    |> insertAfter 100 1

@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Persistent\Stack.fs" />
+    <Compile Include="Persistent\BinaryTree.fs" />
     <Compile Include="Persistent\List.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
