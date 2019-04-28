@@ -1,13 +1,13 @@
 ﻿module Stack
-    type 't Stack = Version of 't Stack * 't
+    type 't Stack = Version of 't * 't Stack
                   | Empty
 
     let push value stack =
         match stack with
-        | Empty -> Version(stack, value)
-        | x -> Version(x, value)
+        | Empty -> Version(value, stack)
+        | x -> Version(value, x)
 
     let pop stack = 
         match stack with
         | Empty -> failwith "Стек пуст."
-        | Version(prev, _) -> prev
+        | Version(_, prev) -> prev
