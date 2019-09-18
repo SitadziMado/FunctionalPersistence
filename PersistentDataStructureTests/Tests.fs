@@ -3,14 +3,11 @@ namespace PersistentDataStructureTests
 open System
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open Persistent
+open Utility
 
 [<TestClass>]
 type TestClass () =
     let list = Persistent.createList [1; 2; 3; 4; 5; 6]
-
-    let eq exp act = Assert.AreEqual(exp, act)
-    let fails f = Assert.ThrowsException<Exception>(Action f) 
-                |> ignore
     
     [<TestMethod>]
     member this.TestMethodPassing() =
@@ -38,8 +35,8 @@ type TestClass () =
         eq [1; 2; 3; 10; 4; 5; 6] (ins 2)
         eq [1; 10; 2; 3; 4; 5; 6] (ins 0)
         eq [1; 2; 3; 4; 5; 6; 10;] (ins 5)
-        fails (fun () -> ins 8; ())
-        fails (fun () -> ins -2; ())
+        fails (fun () -> ins 8 |> ignore)
+        fails (fun () -> ins -2 |> ignore)
     
     [<TestMethod>]
     member this.insertBeforeTest () =
@@ -47,8 +44,8 @@ type TestClass () =
         eq [1; 2; 20; 3; 4; 5; 6] (ins 2)
         eq [20; 1; 2; 3; 4; 5; 6] (ins 0)
         eq [1; 2; 3; 4; 5; 20; 6] (ins 5)     
-        fails (fun () -> ins 8; ())
-        fails (fun () -> ins -2; ())
+        fails (fun () -> ins 8 |> ignore)
+        fails (fun () -> ins -2 |> ignore)
 
     [<TestMethod>]
     member this.removeAtTest () =
@@ -57,5 +54,5 @@ type TestClass () =
         eq [1; 2; 3; 4; 5] (rem 5)
         eq [2; 3; 4; 5; 6] (rem 0)
         eq [1; 2; 3; 5; 6] (rem 3)
-        fails (fun () -> rem -2; ())
-        fails (fun () -> rem 89; ())
+        fails (fun () -> rem -2 |> ignore)
+        fails (fun () -> rem 89 |> ignore)

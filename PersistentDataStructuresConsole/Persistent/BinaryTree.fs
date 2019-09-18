@@ -9,7 +9,7 @@ open System.ComponentModel
         let recall = go value leaf less greater equals
         match tree with
         | Leaf -> leaf Leaf
-        | Branch(value, _, _) -> equals recall tree
+        | Branch(x, _, _) when value = x -> equals recall tree
         | Branch(x, left, _) when value < x -> less recall tree
         | Branch(x, _, right) when value > x -> greater recall tree
     
@@ -25,7 +25,7 @@ open System.ComponentModel
     | Leaf -> failwith "Концевая вершина не имеет потомков."
     | Branch(x, _, _) -> x
 
-    let ins value = 
+    let insert value = 
         let leaf _ = Branch(value, Leaf, Leaf)
         let less cont (Branch(x, left, right)) = Branch(x, cont left, right)
         let greater cont (Branch(x, left, right)) = Branch(x, left, cont right)
@@ -42,6 +42,10 @@ open System.ComponentModel
             Branch(left, insert' value right, x)
         
         insert'*)
+
+    let construct (s : 't seq) =
+        s
+        |> Seq.fold (fun acc x -> insert x acc) Leaf
 
     let find value =
         go value 
@@ -74,10 +78,10 @@ open System.ComponentModel
 
         let equals ctn = function
         | Leaf -> failwith "Структура дерева не предполагает такого исхода."
-        | Branch(_, Leaf, Leaf) -> Leaf
-        | Branch(_, Leaf, right) -> right
-        | Branch(_, left, Leaf) -> left
-        | Branch(x, left, right) -> 
+        | Branch(_, Leaf, Leaf) -> Leaf     // V
+        | Branch(_, Leaf, right) -> right   // V
+        | Branch(_, left, Leaf) -> left     // X
+        | Branch(x, left, right) ->         // X
             match right with
             | Branch(y, Leaf, rightRight) -> rightRight
             | right -> 
@@ -86,9 +90,9 @@ open System.ComponentModel
 
         go value 
             (fun _ -> failwith "Элемент не найден в дереве.")
-            (fun ctn (Branch(_, left, _)) -> ctn left)      // <
-            (fun ctn (Branch(_, _, right)) -> ctn right)    // >
-            equals                                          // =
+            (fun ctn (Branch(x, left, right)) -> Branch(x, ctn left, right))    // <
+            (fun ctn (Branch(x, left, right)) -> Branch(x, left, ctn right))    // >
+            equals                                                              // =
                 
     (*let remove = 
         let rec least acc = function
@@ -119,7 +123,7 @@ open System.ComponentModel
     type TraversalOrder = Prefix
                         | Infix
                         | Postfix
-
+    
     let traverse (f : 't -> unit) order =
         let getOrder = function
         | Prefix -> (fun left right x -> x(); left(); right())
@@ -135,3 +139,8 @@ open System.ComponentModel
                 (fun () -> f x)
 
         traverse'
+
+    let rec toSeq (order : TraversalOrder) (tree : 't BinaryTree) =
+        let mutable lst = new System.Collections.ArrayList(10)
+        traverse (fun x -> lst.Add(x) |> ignore) order tree
+        Seq.cast lst
