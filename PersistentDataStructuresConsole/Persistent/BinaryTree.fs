@@ -12,6 +12,7 @@ open System.ComponentModel
         | Branch(x, _, _) when value = x -> equals recall tree
         | Branch(x, left, _) when value < x -> less recall tree
         | Branch(x, _, right) when value > x -> greater recall tree
+        | Branch(_, _, _) -> failwith "Данный шаблон никогда не должен сопоставиться"
     
     let left = function
     | Leaf -> failwith "Концевая вершина не имеет потомков."
@@ -32,16 +33,6 @@ open System.ComponentModel
         let equals = greater
 
         go value leaf less greater equals
-    
-    (*let insert =
-        let rec insert' value = function
-        | Leaf -> Branch(Leaf, Leaf, value)
-        | Branch(left, right, x) when value <= x ->             
-            Branch(insert' value left, right, x)
-        | Branch(left, right, x) when value > x -> 
-            Branch(left, insert' value right, x)
-        
-        insert'*)
 
     let construct (s : 't seq) =
         s
@@ -53,18 +44,6 @@ open System.ComponentModel
             (fun ctn (Branch(_, left, _)) -> ctn left)      // <
             (fun ctn (Branch(_, _, right)) -> ctn right)    // >
             (fun ctn tree -> tree)                          // =
-
-
-    (*let find = 
-        let rec find' value = function
-        | Leaf -> Leaf
-        | Branch(_, _, x) as tree when value = x -> tree
-        | Branch(left, _, x) when value < x ->
-            find' value left
-        | Branch(_, right, x) when value > x ->
-            find' value right
-        
-        find'*)
     
     let contains value (tree : 't BinaryTree) = 
         match find value tree with
@@ -95,7 +74,7 @@ open System.ComponentModel
                         | Infix
                         | Postfix
     
-    let traverse (f : 't -> unit) order =
+    let traverse (f : 't BinaryTree -> unit) order =
         let getOrder = function
         | Prefix -> (fun left right x -> x(); left(); right())
         | Infix -> (fun left right x -> left(); x(); right())
@@ -103,15 +82,15 @@ open System.ComponentModel
 
         let rec traverse' = function
         | Leaf -> ()
-        | Branch(x, left, right) -> 
+        | Branch(_, left, right) as node -> 
             getOrder order
                 (fun () -> traverse' left)
                 (fun () -> traverse' right)
-                (fun () -> f x)
+                (fun () -> f node)
 
         traverse'
 
     let rec toSeq (order : TraversalOrder) (tree : 't BinaryTree) =
         let mutable lst = new System.Collections.ArrayList(10)
-        traverse (fun x -> lst.Add(x) |> ignore) order tree
+        traverse (fun x -> lst.Add(value x) |> ignore) order tree
         Seq.cast lst
