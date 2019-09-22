@@ -29,7 +29,7 @@ open System.ComponentModel
         let leaf _ = Branch(value, Leaf, Leaf)
         let less cont (Branch(x, left, right)) = Branch(x, cont left, right)
         let greater cont (Branch(x, left, right)) = Branch(x, left, cont right)
-        let equals = less
+        let equals = greater
 
         go value leaf less greater equals
     
@@ -76,49 +76,20 @@ open System.ComponentModel
         | Leaf -> acc
         | Branch(x, left, _) -> least x left
 
-        let equals ctn = function
-        | Leaf -> failwith "Структура дерева не предполагает такого исхода."
-        | Branch(_, Leaf, Leaf) -> Leaf     // V
-        | Branch(_, Leaf, right) -> right   // V
-        | Branch(_, left, Leaf) -> left     // X
-        | Branch(x, left, right) ->         // X
-            match right with
-            | Branch(y, Leaf, rightRight) -> rightRight
-            | right -> 
-                let m = least x right
-                Branch(m, left, remove m right)
+        let equals _ = function
+        | Leaf -> failwith "Некорректное дерево."
+        | Branch(_, Leaf, Leaf) -> Leaf     // V У вершины нет детей
+        | Branch(_, Leaf, right) -> right   // V У вершины только правый ребенок
+        | Branch(_, left, Leaf) -> left     // V У вершины только левый ребенок
+        | Branch(x, left, right) ->         // X У вершины оба ребенка
+            let m = least x right
+            Branch(m, left, remove m right)
 
         go value 
             (fun _ -> failwith "Элемент не найден в дереве.")
-            (fun ctn (Branch(x, left, right)) -> Branch(x, ctn left, right))    // <
-            (fun ctn (Branch(x, left, right)) -> Branch(x, left, ctn right))    // >
-            equals                                                              // =
-                
-    (*let remove = 
-        let rec least acc = function
-        | Leaf -> acc
-        | Branch(left, _, x) -> least x left
-
-        let rec remove' value = function
-        | Leaf -> failwith "Элемент не найден в дереве."
-        | Branch(_, _, x) as tree when value = x ->
-            match tree with
-            | Leaf -> failwith "Структура дерева не предполагает такого исхода."
-            | Branch(Leaf, Leaf, _) -> Leaf
-            | Branch(Leaf, right, _) -> right
-            | Branch(left, Leaf, _) -> left
-            | Branch(left, right, x) -> 
-                match right with
-                | Branch(Leaf, rightRight, y) -> rightRight
-                | right -> 
-                    let m = least x right
-                    Branch(left, remove' m right, m)
-        | Branch(left, right, x) when value < x -> 
-            Branch(remove' value left, right, x)
-        | Branch(left, right, x) when value > x -> 
-            Branch(left, remove' value right, x)
-
-        remove'*)
+            (fun cont (Branch(x, left, right)) -> Branch(x, cont left, right))    // <
+            (fun cont (Branch(x, left, right)) -> Branch(x, left, cont right))    // >
+            equals                                                                // =
     
     type TraversalOrder = Prefix
                         | Infix
