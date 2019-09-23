@@ -111,69 +111,63 @@ open System
     type TraversalOrder = Prefix
                         | Infix
                         | Postfix
+
+    let internal getOrder acc = function
+    | Prefix -> (fun left right x -> right (left (x acc)))
+    | Infix -> (fun left right x -> right(x (left acc)))
+    | Postfix -> (fun left right x -> x(right (left acc)))
     
-    /// <summary>
-    /// Обход дерева в указанном порядке
-    /// </summary>
-    /// <param name="f">Функция обратного вызова (текущий узел)</param>
-    /// <param name="order">Порядок обхода</param>
-    let traverse (f : 't BinaryTree -> unit) order =
-        let getOrder = function
-        | Prefix -> (fun left right x -> x(); left(); right())
-        | Infix -> (fun left right x -> left(); x(); right())
-        | Postfix -> (fun left right x -> left(); right(); x())
+    let internal minMax f tree =
+        let rec minMax' acc = function
+        | Leaf -> acc
+        | node ->  minMax' (value node) (f node) //max' x right
 
-        let rec traverse' = function
-        | Leaf -> ()
-        | Branch(_, left, right) as node -> 
-            getOrder order
-                (fun () -> traverse' left)
-                (fun () -> traverse' right)
-                (fun () -> f node)
-
-        traverse'
-    
-    (*let internal getOrder = function
-    | Prefix -> (fun left right x -> right (left (x())))
-    | Infix -> (fun left right x -> right(x (left())))
-    | Postfix -> (fun left right x -> x(right (left())))*)
+        minMax' (value tree)
 
     /// <summary>
-    /// Произвести свертку дерева по функции
+    /// Нахождение наибольшего элемента в дереве
     /// </summary>
-    /// <param name="f">Функция для свертки (левое значение, правое значение)</param>
-    let accumulate (f : 'a -> 'a -> 'a) = 
-        let rec accumulate' = function
-        | Branch(x, Leaf, Leaf) -> x
-        | Branch(x, left, Leaf) -> f x (accumulate' left)
-        | Branch(x, Leaf, right) -> f x (accumulate' right)
-        | Branch(x, left, right) as node -> f x (f (accumulate' left) (accumulate' right))
-        | Leaf -> failwith "Недопустимая структура дерева"
-
-        accumulate'
-
-    /// <summary>
-    /// Найти максимальное значение в дереве
-    /// </summary>
-    /// <param name="tree"></param>
-    let max (tree : 't BinaryTree) = 
+    /// <param name="tree">Дерево для обработки</param>
+    let max tree = 
         tree 
-        |> accumulate (fun x y -> if x > y then x else y) 
-    
+        |> minMax right
+        
     /// <summary>
-    /// Найти минимальное значение в дереве
+    /// Нахождение наименьшего элемента в дереве
     /// </summary>
-    /// <param name="tree"></param>
-    let min (tree : 't BinaryTree) = 
+    /// <param name="tree">Дерево для обработки</param>
+    let min tree = 
         tree 
-        |> accumulate (fun x y -> if x < y then x else y)
-     
+        |> minMax left
+
     /// <summary>
-    /// Преобразование дерева в плоскую последовательность с учетом порядка обхода
+    /// Обход дерева в соответсвии с указаным порядком и заданной фукнцией обработки
+    /// </summary>
+    /// <param name="f">Функция для обработки каждого значения (аккумулятор, текущее)</param>
+    /// <param name="order">Порядок обхода дерева</param>
+    /// <param name="init">Начальное значение</param>
+    let traverse f order init =
+        let rec dfs' acc = function
+        | Leaf -> acc
+        | Branch(x, left, right) -> 
+            let dfsInv = Utility.swap dfs'
+
+            getOrder acc order
+                (dfsInv left)
+                (dfsInv right)
+                ((Utility.swap f) x)
+
+        dfs' init
+
+    /// <summary>
+    /// Преобразование дерева в список
     /// </summary>
     /// <param name="order">Порядок обхода</param>
-    /// <param name="tree">Дерево для обхода</param>
-    let rec toSeq (order : TraversalOrder) (tree : 't BinaryTree) =
-        let mutable lst = new System.Collections.ArrayList(10)
-        traverse (fun x -> lst.Add(value x) |> ignore) order tree
-        Seq.cast lst
+    let toList order = 
+        traverse (fun acc x -> x :: acc) order [] >> List.rev
+    
+    /// <summary>
+    /// Преобразование дерева последовательность
+    /// </summary>
+    /// <param name="order">Порядок обхода</param>
+    let toSeq order = toList order >> List.toSeq
