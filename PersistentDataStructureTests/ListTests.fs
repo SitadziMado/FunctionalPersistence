@@ -6,7 +6,7 @@ open Persistent
 open Utility
 
 [<TestClass>]
-type TestClass () =
+type ListTestClass () =
     let list = Persistent.createList [1; 2; 3; 4; 5; 6]
     
     [<TestMethod>]

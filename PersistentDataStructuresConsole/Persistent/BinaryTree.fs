@@ -48,7 +48,7 @@ open System
         let leaf _ = Branch(value, Leaf, Leaf)
         let less cont (Branch(x, left, right)) = Branch(x, cont left, right)
         let greater cont (Branch(x, left, right)) = Branch(x, left, cont right)
-        let equals = greater
+        let equals = less // Можно поменять для смены <= или >=
 
         go value leaf less greater equals
 
@@ -122,23 +122,19 @@ open System
         | Leaf -> acc
         | node ->  minMax' (value node) (f node) //max' x right
 
-        minMax' (value tree)
+        minMax' (value tree) tree
 
     /// <summary>
     /// Нахождение наибольшего элемента в дереве
     /// </summary>
     /// <param name="tree">Дерево для обработки</param>
-    let max tree = 
-        tree 
-        |> minMax right
+    let max tree = minMax right tree
         
     /// <summary>
     /// Нахождение наименьшего элемента в дереве
     /// </summary>
     /// <param name="tree">Дерево для обработки</param>
-    let min tree = 
-        tree 
-        |> minMax left
+    let min tree = minMax left tree
 
     /// <summary>
     /// Обход дерева в соответсвии с указаным порядком и заданной фукнцией обработки
