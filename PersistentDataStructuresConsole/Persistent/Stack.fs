@@ -7,7 +7,7 @@
         | Empty -> Version(value, stack)
         | x -> Version(value, x)
 
-    let pop  = function
+    let pop = function
     | Empty -> failwith "Стек пуст."
     | Version(_, prev) -> prev
 

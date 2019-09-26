@@ -66,7 +66,7 @@ open System
     /// <param name="value">Значение для поиска</param>
     let find value =
         go value 
-            (fun _ -> Leaf)                                 // Leaf
+            (fun leaf -> leaf)                              // Leaf
             (fun ctn (Branch(_, left, _)) -> ctn left)      // <
             (fun ctn (Branch(_, _, right)) -> ctn right)    // >
             (fun ctn tree -> tree)                          // =
@@ -163,7 +163,7 @@ open System
         traverse (fun acc x -> x :: acc) order [] >> List.rev
     
     /// <summary>
-    /// Преобразование дерева последовательность
+    /// Преобразование дерева в последовательность
     /// </summary>
     /// <param name="order">Порядок обхода</param>
-    let toSeq order = toList order >> List.toSeq
+    let toSeq order = traverse (fun _ x -> seq { yield x }) order Seq.empty // toList order >> List.toSeq
