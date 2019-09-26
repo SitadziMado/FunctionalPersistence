@@ -1,0 +1,21 @@
+﻿<Window x:Class="PersistentDataStructuresGui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PersistentDataStructuresGui"
+        xmlns:controls="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
+        xmlns:gsc="clr-namespace:GraphSharp.Controls;assembly=GraphSharp.Controls"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        x:Name="Main">
+    <Grid>
+        <controls:ZoomControl>
+            <gsc:GraphLayout x:Name="GraphLayout"
+                                    Graph="{Binding ElementName=Main,Path=GraphToVisualize}"
+                                    LayoutAlgorithmType="Tree"
+                                    OverlapRemovalAlgorithmType="FSA"
+                                    HighlightAlgorithmType="Simple" />
+        </controls:ZoomControl>
+    </Grid>
+</Window>

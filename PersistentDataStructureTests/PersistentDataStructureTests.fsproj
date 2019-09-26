@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PersistentDataStructuresConsole\PersistentDataStructuresConsole.fsproj" />
+    <ProjectReference Include="..\PersistentDataStructures\PersistentDataStructures.fsproj" />
   </ItemGroup>
 
 </Project>
