@@ -7,7 +7,7 @@ open System
     /// Двоичное дерево поиска
     /// </summary>
     type 't BinaryTree = Branch of 't * 't BinaryTree * 't BinaryTree
-                       | Leaf
+                       | Leaf 
 
     let rec internal go value leaf less greater equals tree =
         let recall = go value leaf less greater equals
@@ -22,14 +22,14 @@ open System
     /// Получить левого ребенка текущего узла
     /// </summary>
     let left = function
-    | Leaf -> failwith "Концевая вершина не имеет потомков."
+    | Leaf -> invalidArg "tree" "Концевая вершина не имеет потомков."
     | Branch(_, left, _) -> left
     
     /// <summary>
     /// Получить правого ребенка текущего узла
     /// </summary>
     let right = function
-    | Leaf -> failwith "Концевая вершина не имеет потомков."
+    | Leaf -> invalidArg "tree" "Концевая вершина не имеет потомков."
     | Branch(_, _, right) -> right
 
     
@@ -37,7 +37,7 @@ open System
     /// Получить значение текущего узла
     /// </summary>
     let value = function
-    | Leaf -> failwith "Концевая вершина не имеет потомков."
+    | Leaf -> invalidArg "tree" "Концевая вершина не имеет потомков."
     | Branch(x, _, _) -> x
 
     /// <summary>
@@ -91,7 +91,7 @@ open System
         | Branch(x, left, _) -> least x left
 
         let equals _ = function
-        | Leaf -> failwith "Некорректное дерево."
+        | Leaf -> invalidArg "tree" "Некорректное дерево."
         | Branch(_, Leaf, Leaf) -> Leaf     // V У вершины нет детей
         | Branch(_, Leaf, right) -> right   // V У вершины только правый ребенок
         | Branch(_, left, Leaf) -> left     // V У вершины только левый ребенок
@@ -100,7 +100,7 @@ open System
             Branch(m, left, remove m right)
 
         go value 
-            (fun _ -> failwith "Элемент не найден в дереве.")
+            (fun _ -> invalidArg "value" "Элемент не найден в дереве.")
             (fun cont (Branch(x, left, right)) -> Branch(x, cont left, right))    // <
             (fun cont (Branch(x, left, right)) -> Branch(x, left, cont right))    // >
             equals                                                                // =
@@ -145,13 +145,13 @@ open System
     let traverse f order init =
         let rec dfs' acc = function
         | Leaf -> acc
-        | Branch(x, left, right) -> 
+        | Branch(x, left, right) as node -> 
             let dfsInv = Utility.swap dfs'
 
             getOrder acc order
                 (dfsInv left)
                 (dfsInv right)
-                ((Utility.swap f) x)
+                ((Utility.swap f) node)
 
         dfs' init
 
@@ -160,10 +160,12 @@ open System
     /// </summary>
     /// <param name="order">Порядок обхода</param>
     let toList order = 
-        traverse (fun acc x -> x :: acc) order [] >> List.rev
+        traverse (fun acc x -> (value x) :: acc) order [] >> List.rev
     
     /// <summary>
     /// Преобразование дерева в последовательность
     /// </summary>
     /// <param name="order">Порядок обхода</param>
-    let toSeq order = traverse (fun _ x -> seq { yield x }) order Seq.empty // toList order >> List.toSeq
+    let toSeq order = toList order >> List.toSeq // traverse (fun _ x -> seq { yield value x }) order Seq.empty
+
+    let toRawSeq order = traverse (fun acc x -> x :: acc) order [] >> List.rev >> List.toSeq

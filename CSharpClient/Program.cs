@@ -1,5 +1,6 @@
 ﻿using System;
-using static Persistent;
+using Persistent;
+using static Persistent.List;
 
 namespace CSharpClient
 {

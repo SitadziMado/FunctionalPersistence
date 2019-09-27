@@ -10,12 +10,44 @@
         Title="MainWindow" Height="450" Width="800"
         x:Name="Main">
     <Grid>
-        <controls:ZoomControl>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <controls:ZoomControl Grid.Column="0">
             <gsc:GraphLayout x:Name="GraphLayout"
                                     Graph="{Binding ElementName=Main,Path=GraphToVisualize}"
                                     LayoutAlgorithmType="Tree"
                                     OverlapRemovalAlgorithmType="FSA"
                                     HighlightAlgorithmType="Simple" />
         </controls:ZoomControl>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0">Введите элемент:</Label>
+            <TextBox Name="ElementTextBox" Grid.Row="1">0</TextBox>
+            <Button Name="InsertButton" Grid.Row="2" Content="Вставить" Click="InsertButton_Click"/>
+            <Button Name="RemoveButton"  Grid.Row="3" Content="Удалить" Click="RemoveButton_Click"/>
+            <Button Name="FindButton" Grid.Row="4" Content="Искать" Click="FindButton_Click"/>
+            <Separator Grid.Row="5" Height="6"></Separator>
+            <TextBox Name="VersionTextBox" Grid.Row="7">0</TextBox>
+            <Button Name="ShowOnlyToggle" Grid.Row="8" HorizontalAlignment="Left" Width="105" Click="ShowOnlyToggle_Checked">
+                <TextBlock Name="ShowOnlyTextBlock" Text="Показать одну&#x0a;версию" TextAlignment="Center"></TextBlock>
+            </Button>
+            <Button Name="RemoveVersionButton" Grid.Row="9" Content="Удалить" Click="RemoveVersionButton_Click"/>
+        </Grid>
     </Grid>
 </Window>

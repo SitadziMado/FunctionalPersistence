@@ -1,6 +1,6 @@
 ﻿// Learn more about F# at http://fsharp.org
 
-open System
+module Persistent.App
 
 let tree = BinaryTree.construct [2; 1; 3; 5; 7; 3; 5]
 
